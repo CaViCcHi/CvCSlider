@@ -31,15 +31,26 @@ Options
 
 There are a few options available so far
 
-* 	*interval*: is the interval between each slide (default: 3000) ms
-*	*type*: is the type of sliding (default: fade) possible values so far are slide, fade
-* 	*speed*: is the jquery speed for each action (default: slow) refer to jQuery manual about the allowed values
+* 	*move_interval*: is the interval between each slide (default: 7000) ms
+*	*move_type*: is the type of sliding (default: fade) possible values so far are slide, fade
+* 	*move_speed*: is the jquery speed for each action (default: slow) refer to jQuery manual about the allowed values
+*       *cvc_active*: is the class attributed to the image or button activated (default: active)
+*	*cvc_window*: Class of the images container, default '.slider-window'
+*	*cvc_items*: Class of the single image, default '.slider-item'
+*	*cvc_caption*: Class of the caption for a single image, default '.slider-caption'
+*	*cvc_button_dad*: Class of the buttons container (whatever contains the single steps), default '.slider-buttons'
+*	*cvc_button*: Class of the single button, default '.slider-button'
+*	*cvc_pause*: Class of the pause button, default '.slider-pause'
+*	*cvc_play*: Class of the play button, default '.slider-play'
+*	*cvc_prev*: Class of the previous button, default '.slider-prev'
+*	*cvc_next*: Class of the next button, default '.slider-next'
 
 A small example would be
 
 	$(".bottom-slider").CvCSlide({
-		'interval' : 7000,
-		'type' : 'slide'
+		'move_interval' : 7000,
+		'move_type' : 'slide',
+                'move_speed' : 1000
 	});
 	
 will slide the items every 7 seconds
