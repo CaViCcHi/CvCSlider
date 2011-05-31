@@ -13,16 +13,26 @@ include the library
 add the class *item-slider* to the children (that will have to slide)
 
 	<div class="bottom-slider">
-	        <div class="item-slider slider1"></div>
-	        <div class="item-slider slider2"></div>
-	        <div class="item-slider slider3"></div>
-	        <div class="item-slider slider4"></div>
+                <div class="bottom-slider-in">
+	                <div class="item-slider slider1"></div>
+	                <div class="item-slider slider2"></div>
+	                <div class="item-slider slider3"></div>
+	                <div class="item-slider slider4"></div>
+	        </div>
+                <div class="item-toolbox">
+	                <div class="item-button">1</div>
+	                <div class="item-button">2</div>
+	                <div class="item-button">3</div>
+	                <div class="item-button">4</div>
+	        </div>
+                <div class="item-prev"></div>
+                <div class="item-next"></div>
 	</div>
 	
 and now simply call the method
 
 	$(document).ready(function(){
-		$(".bottom-slider").CvCSlide();
+		$(".bottom-slider").CvCSlide( { ...options... } );
 	});
 	
 
@@ -48,12 +58,18 @@ There are a few options available so far
 A small example would be
 
 	$(".bottom-slider").CvCSlide({
-		'move_interval' : 7000,
-		'move_type' : 'slide',
-                'move_speed' : 1000
+	       move_type 	: 'slide',
+	       move_speed 	: 1000,
+	       move_interval 	: 7000,
+	       cvc_window       : '.bottom-slider-in',
+	       cvc_items	: '.item-slider',
+	       cvc_button_dad	: '.item-toolbox',
+	       cvc_button	: '.item-button',
+	       cvc_prev	        : '.item-prev',
+	       cvc_next	        : '.item-prev'
 	});
 	
-will slide the items every 7 seconds
+will slide the items every 7 seconds with previous/next or the single slides
 
 
 
