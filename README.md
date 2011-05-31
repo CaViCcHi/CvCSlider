@@ -13,20 +13,20 @@ include the library
 add the class *item-slider* to the children (that will have to slide)
 
 	<div class="bottom-slider">
-                <div class="bottom-slider-in">
-	                <div class="item-slider slider1"></div>
-	                <div class="item-slider slider2"></div>
-	                <div class="item-slider slider3"></div>
-	                <div class="item-slider slider4"></div>
-	        </div>
-                <div class="item-toolbox">
-	                <div class="item-button">1</div>
-	                <div class="item-button">2</div>
-	                <div class="item-button">3</div>
-	                <div class="item-button">4</div>
-	        </div>
-                <div class="item-prev"></div>
-                <div class="item-next"></div>
+		<div class="bottom-slider-in">
+			<div class="item-slider slider1"></div>
+			<div class="item-slider slider2"></div>
+			<div class="item-slider slider3"></div>
+			<div class="item-slider slider4"></div>
+		</div>
+		<div class="item-toolbox">
+			<div class="item-button">1</div>
+			<div class="item-button">2</div>
+			<div class="item-button">3</div>
+			<div class="item-button">4</div>
+		</div>
+		<div class="item-prev"></div>
+		<div class="item-next"></div>
 	</div>
 	
 and now simply call the method
