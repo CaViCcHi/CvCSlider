@@ -114,7 +114,7 @@
 		
 /* Privates */
 		$buttons.click(function( event ){
-		if( $( this ).attr('id').length > 0 ){
+		if( $( this ).attr('id') ){
    			var id = $( this ).attr('id').split('-');
 		        var index = ( id[1] != undefined ) ? id[1] : $( this ).index();
 		}else{
