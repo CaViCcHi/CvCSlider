@@ -41,7 +41,7 @@ Options
 
 There are a few options available so far
 
-* 	*move_interval*: is the interval between each slide (default: 7000) ms
+* 	*move_interval*: is the interval between each slide (default: 7000) ms, if 0 the slider won't slide automatically
 *	*move_type*: is the type of sliding (default: fade) possible values so far are slide, fade
 * 	*move_speed*: is the jquery speed for each action (default: slow) refer to jQuery manual about the allowed values
 *       *cvc_active*: is the class attributed to the image or button activated (default: active)
