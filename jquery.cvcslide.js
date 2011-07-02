@@ -15,17 +15,17 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-(function($) {
+(function(jQuery) {
 
 	/**
 	* Initialize and setup plugin
 	* @param {Object} options The set of options to pass to over-write the defaults
 	*/
-	$.fn.cvcslide = $.fn.CvCSlide = function(options){
+	jQuery.fn.cvcslide = jQuery.fn.CvCSlide = function(options){
 
 		// General
 		var main = this,
-			interval = 0,
+			interval = false,
 			captions = false,
 			buttons = false,
 			current = 0,
@@ -43,10 +43,10 @@
 				cvc_window      : '.slider-window',
 				cvc_items	: '.slider-item',
 				cvc_caption	: '.slider-caption',
-				
+
 				cvc_button_dad  : '.slider-buttons',
 				cvc_button      : '.slider-button',
-				
+
 				cvc_pause       : '.slider-pause',
 				cvc_play	: '.slider-play',
 
@@ -59,23 +59,36 @@
 				move_type       : 'fade',
 				move_speed      : 'slow',
 				move_fluid      : true,
+
+				active          : true,
 				
-				active          : true
+				debug           : false
 			},
 
 			// Now overwrite the default options with the ones passed in
-			options = $.extend(defaults, options),
-			$items = $(options.cvc_items, main),
-			$buttons = $(options.cvc_button, options.cvc_button_dad),
-			$cover = $(options.cvc_window, main),
-			
-			$play = $(options.cvc_play),
-			$pause = $(options.cvc_pause),
-			
-			$prev = $(options.cvc_prev),
-			$next = $(options.cvc_next),
-			
+			options = jQuery.extend(defaults, options),
+			$items = jQuery(options.cvc_items, main),
+			$buttons = jQuery(options.cvc_button, options.cvc_button_dad),
+			$cover = jQuery(options.cvc_window, main),
+
+			$play = jQuery(options.cvc_play),
+			$pause = jQuery(options.cvc_pause),
+
+			$prev = jQuery(options.cvc_prev),
+			$next = jQuery(options.cvc_next),
+
 			item_max = $items.size() - 1;
+/* General */
+		jQuery(window).blur(function(){
+		_llog('Unloading Action');
+			clearInterval(interval);
+			interval=false;
+			jQuery( main ).dequeue();
+		}).focus(function(){
+		_llog('Reloading Action');
+			jQuery( main ).dequeue();
+			_function_unqueue();
+		});
 /* Public */
 		// Actions
 		function action_play(){
@@ -91,7 +104,7 @@
 			playing = false;
 		        clearInterval( interval );
 		}
-		
+
 		function action_auto(){
 			_decide_next();
 			_move_to();
@@ -111,14 +124,14 @@
 			_decide_goto( index );
 			_move_to();
 		}
-		
+
 /* Privates */
 		$buttons.click(function( event ){
-		if( $( this ).attr('id') ){
-   			var id = $( this ).attr('id').split('-');
-		        var index = ( id[1] != undefined ) ? id[1] : $( this ).index();
+		if( jQuery( this ).attr('id') ){
+   			var id = jQuery( this ).attr('id').split('-');
+		        var index = ( id[1] != undefined ) ? id[1] : jQuery( this ).index();
 		}else{
-			var index = $( this ).index();
+			var index = jQuery( this ).index();
 		}
 		        action_index( parseInt( index ) );
 		})
@@ -144,7 +157,7 @@
 		}
 		function _function_activate(){
 		        // Remove Class from Buttons
-			$(options.cvc_button+'.'+options.cvc_active, options.cvc_button_dad).removeClass( options.cvc_active );
+			jQuery(options.cvc_button+'.'+options.cvc_active, options.cvc_button_dad).removeClass( options.cvc_active );
 			// Add class to image
 			$object_next.addClass( options.cvc_active );
 			// Add class to the button
@@ -152,23 +165,30 @@
 		}
 		// Decisions
 		function _decide_goto( index ){
+		_llog('Decide Goto');
 		        if( index > item_max ) index = item_max;
-		        
+
 		        next = index;
+		        
+		        _llog('---> Next:'+next);
 		}
 		function _decide_prev(){
+		_llog('Decide Previous');
 		        if(current == 0){
 		        	next = item_max
 		        }else{
 		                next = current - 1;
 		        }
+		        _llog('---> Next:'+next);
 		}
 		function _decide_next(){
+		_llog('Decide Next');
 		        if(current == item_max){
 		        	next = 0
 		        }else{
 		                next = current + 1;
 		        }
+		        _llog('---> Next:'+next);
 		}
 
 		// Movements
@@ -176,12 +196,12 @@
 
 			$object_now = $items.eq( current );
 			$object_next = $items.eq( next );
-			
+
 		        eval( '_movement_'+options.move_type+'();' );
-		        
+
 		        current = next;
 		}
-		
+
 		function _movement_fade(){
 			_function_activate();
 			$object_now.fadeOut( options.move_speed );
@@ -196,48 +216,61 @@
 			);
 		}
 		
+		// Debug
+		function _llog(text){
+			if(options.debug) console.info( '[CvCSlider] '+text );
+		}
+
 		// Start
 		return this.each(function() {
-			$( this ).css({'overflow':'hidden'});
+		_llog('Starting on '+main+' found '+item_max+' children');
+			jQuery( this ).css({'overflow':'hidden'});
 			if( options.move_type == 'fade' ){
-				$(options.cvc_items, this).each(function(index, element){
-					$(element).css({
+				_llog('Movement: Fade');
+				jQuery(options.cvc_items, this).each(function(index, element){
+					jQuery(element).css({
 				                'position'	: 'absolute',
 				                'top'           : 0,
 				                'left'          : 0
 					});
 				        if( index > 0 ){
-				                $(element).css({
+				                jQuery(element).css({
 				                        'display'       : 'none'
 						});
 				        }
 				});
 			}else{
-			        if( $(options.cvc_window, this).css('position') != 'absolute' ){
-					$(options.cvc_window, this).css({'overflow':'hidden','position':'absolute','top':0,'left':0});
+				_llog('Movement: Slide');
+			        if( jQuery(options.cvc_window, this).css('position') != 'absolute' ){
+			        	_llog('Absolute already set on '+main+'; I suppose you\'re taking care of its css');
+					jQuery(options.cvc_window, this).css({'overflow':'hidden','position':'absolute','top':0,'left':0});
 				}
-				$(options.cvc_items, this).each(function(index, element){
-					var myW = parseInt( $(element).width() );
+				jQuery(options.cvc_items, this).each(function(index, element){
+					var myW = parseInt( jQuery(element).width() );
 					imgW[ index ] = myW;
 					var myX = ( index > 0 ) ? parseInt( imgX[ (index - 1) ] + imgW[ (index - 1) ] ) : 0;
 					imgX[ index ] = myX;
 					fluidW += myW;
-					$(element).css({
+					jQuery(element).css({
 				                'position'	: 'absolute',
 				                'top'           : 0 ,
 				                'left'          : myX
 					});
+					_llog('Slide '+index+': Width:'+myW+' Xpos:'+myX);
 				});
 				$cover.width( fluidW );
+				_llog('Film width: '+fluidW);
 			}
 			$object_next = $items.eq( 0 );
 			_function_activate();
-			if( $(options.cvc_caption, this) ) captions = true;
-			if( $(options.cvc_button, this) ) buttons = true;
+			if( jQuery(options.cvc_caption, this) ) captions = true;
+			if( jQuery(options.cvc_button, this) ) buttons = true;
 
 			if( options.move_interval > 0 && item_max > 0 ){
+				_llog('Automatic Play');
 			        action_play();
 			}
+			_llog('init Complete');
 		});
 
 
