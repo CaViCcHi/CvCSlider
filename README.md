@@ -2,6 +2,7 @@ CvC Slider
 =============
 
 This is a very simple Slider for jQuery, can be used in the page as many times as it is required.
+It is now safe to use it everywhere in conjunction with any other javascript framework (moved from $ to jQuery)
 
 Usage
 -------
@@ -14,10 +15,10 @@ add the class *item-slider* to the children (that will have to slide)
 
 	<div class="bottom-slider">
 		<div class="bottom-slider-in">
-			<div class="item-slider slider1"></div>
-			<div class="item-slider slider2"></div>
-			<div class="item-slider slider3"></div>
-			<div class="item-slider slider4"></div>
+			<div class="item-picture slider1"></div>
+			<div class="item-picture slider2"></div>
+			<div class="item-picture slider3"></div>
+			<div class="item-picture slider4"></div>
 		</div>
 		<div class="item-toolbox">
 			<div class="item-button">1</div>
@@ -29,7 +30,7 @@ add the class *item-slider* to the children (that will have to slide)
 		<div class="item-next"></div>
 	</div>
 	
-and now simply call the method
+and now simply call the method (this is just an example ( ...options... ) will give you an error :)
 
 	$(document).ready(function(){
 		$(".bottom-slider").CvCSlide( { ...options... } );
@@ -54,6 +55,7 @@ There are a few options available so far
 *	*cvc_play*: Class of the play button, default '.slider-play'
 *	*cvc_prev*: Class of the previous button, default '.slider-prev'
 *	*cvc_next*: Class of the next button, default '.slider-next'
+*       *debug*: Do you want to debug the class? everything will be logged in the console, default false
 
 A small example would be
 
@@ -62,14 +64,17 @@ A small example would be
 	       move_speed 	: 1000,
 	       move_interval 	: 7000,
 	       cvc_window       : '.bottom-slider-in',
-	       cvc_items	: '.item-slider',
+	       cvc_items	: '.item-picture',
 	       cvc_button_dad	: '.item-toolbox',
 	       cvc_button	: '.item-button',
 	       cvc_prev	        : '.item-prev',
 	       cvc_next	        : '.item-prev'
 	});
 	
+
 will slide the items every 7 seconds with previous/next or the single slides
+
+Remember to make sure that the classes you have in your file match then one you are telling the class!
 
 
 
