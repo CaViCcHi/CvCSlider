@@ -35,6 +35,10 @@
 			playing = false,
 			$object_now = null,
 			$object_next = null,
+			ms_lastindex = null,
+			ms_pages = null,
+			ms_off = null,
+			ms_pageIndex = Array(),
 			imgX = Array(),
 			imgW = Array(),
 
@@ -60,6 +64,10 @@
 				move_speed      : 'slow',
 				move_fluid      : true,
 
+				ms_show 	: 3,
+				ms_margin	: 10,
+				ms_fullpages	: true,
+
 				active          : true,
 				
 				debug           : false
@@ -78,6 +86,7 @@
 			$next = jQuery(options.cvc_next),
 
 			item_max = $items.size() - 1;
+			item_avail = $items.size();
 /* General */
 		jQuery(window).blur(function(){
 		_llog('Unloading Action');
@@ -166,37 +175,76 @@
 		// Decisions
 		function _decide_goto( index ){
 		_llog('Decide Goto');
-		        if( index > item_max ) index = item_max;
-
+			switch( options.move_type ){
+				case 'multislide':
+				        if( index > ( ms_pages - 1 ) ) index = ( ms_pages - 1 );
+				break;
+				case 'slide':
+				case 'fade':
+				        if( index > item_max ) index = item_max;
+				break;
+			}
 		        next = index;
 		        
 		        _llog('---> Next:'+next);
 		}
 		function _decide_prev(){
 		_llog('Decide Previous');
-		        if(current == 0){
-		        	next = item_max
-		        }else{
-		                next = current - 1;
-		        }
+			switch( options.move_type ){
+				case 'multislide':
+				        if(current == 0){
+				        	next =  ( ms_pages - 1 )
+				        }else{
+				                next = current - 1;
+				        }
+				break;
+				case 'slide':
+				case 'fade':
+				        if(current == 0){
+				        	next = item_max
+				        }else{
+				                next = current - 1;
+				        }
+				break;
+			}
 		        _llog('---> Next:'+next);
 		}
 		function _decide_next(){
 		_llog('Decide Next');
-		        if(current == item_max){
-		        	next = 0
-		        }else{
-		                next = current + 1;
-		        }
+			switch( options.move_type ){
+				case 'multislide':
+				        if( current == ( ms_pages - 1 ) ){
+				        	next = 0
+				        }else{
+				                next = current + 1;
+				        }
+				break;
+				case 'slide':
+				case 'fade':
+				        if(current == item_max){
+				        	next = 0
+				        }else{
+				                next = current + 1;
+				        }
+				break;
+			}
 		        _llog('---> Next:'+next);
 		}
 
 		// Movements
 		function _move_to(){
-
-			$object_now = $items.eq( current );
-			$object_next = $items.eq( next );
-
+			switch( options.move_type ){
+				case 'multislide':
+					$object_now = $items.eq( ms_pageIndex[ current ] );
+					$object_next = $items.eq( ms_pageIndex[ next ] );
+				break;
+				case 'slide':
+				case 'fade':
+					$object_now = $items.eq( current );
+					$object_next = $items.eq( next );
+				break;
+			}
+			
 		        eval( '_movement_'+options.move_type+'();' );
 
 		        current = next;
@@ -215,52 +263,123 @@
 				,options.move_speed
 			);
 		}
+		function _movement_multislide(){
+		_llog('Moving to '+$object_next.index());
+			_function_activate();
+			$cover.animate({
+			        	'left' : -imgX[ $object_next.index() ]
+				}
+				,options.move_speed
+			);
+		}
 		
 		// Debug
 		function _llog(text){
-			if(options.debug) console.info( '[CvCSlider] '+text );
+			if(!options.debug) return false;
+		        switch( true ){
+		                case ( jQuery.browser.msie && jQuery.browser.version <= 7.00 ):
+		                        alert( '[CvCSlider] '+text );
+		                break;
+		                default:
+					console.info( '[CvCSlider] '+text );
+				break;
+			}
 		}
 
 		// Start
 		return this.each(function() {
-		_llog('Starting on '+main+' found '+item_max+' children');
+		_llog('Starting: found '+item_avail+' children');
+		//alert( jQuery.browser.msie );
 			jQuery( this ).css({'overflow':'hidden'});
-			if( options.move_type == 'fade' ){
-				_llog('Movement: Fade');
-				jQuery(options.cvc_items, this).each(function(index, element){
-					jQuery(element).css({
-				                'position'	: 'absolute',
-				                'top'           : 0,
-				                'left'          : 0
-					});
-				        if( index > 0 ){
-				                jQuery(element).css({
-				                        'display'       : 'none'
+			switch( options.move_type ){
+			        case 'fade':
+					_llog('Movement: Fade');
+					jQuery(options.cvc_items, this).each(function(index, element){
+						jQuery(element).css({
+					                'position'	: 'absolute',
+					                'top'           : 0,
+					                'left'          : 0
 						});
-				        }
-				});
-			}else{
-				_llog('Movement: Slide');
-			        if( jQuery(options.cvc_window, this).css('position') != 'absolute' ){
-			        	_llog('Absolute already set on '+main+'; I suppose you\'re taking care of its css');
-					jQuery(options.cvc_window, this).css({'overflow':'hidden','position':'absolute','top':0,'left':0});
-				}
-				jQuery(options.cvc_items, this).each(function(index, element){
-					var myW = parseInt( jQuery(element).width() );
-					imgW[ index ] = myW;
-					var myX = ( index > 0 ) ? parseInt( imgX[ (index - 1) ] + imgW[ (index - 1) ] ) : 0;
-					imgX[ index ] = myX;
-					fluidW += myW;
-					jQuery(element).css({
-				                'position'	: 'absolute',
-				                'top'           : 0 ,
-				                'left'          : myX
+					        if( index > 0 ){
+					                jQuery(element).css({
+					                        'display'       : 'none'
+							});
+					        }
 					});
-					_llog('Slide '+index+': Width:'+myW+' Xpos:'+myX);
-				});
-				$cover.width( fluidW );
-				_llog('Film width: '+fluidW);
+			        break;
+			        case 'slide':
+					_llog('Movement: Slide');
+				        if( jQuery(options.cvc_window, this).css('position') != 'absolute' ){
+				        	_llog('Absolute already set on '+main+'; I suppose you\'re taking care of its css');
+						jQuery(options.cvc_window, this).css({'overflow':'hidden','position':'absolute','top':0,'left':0});
+					}
+					jQuery(options.cvc_items, this).each(function(index, element){
+						var myW = parseInt( jQuery(element).width() );
+						imgW[ index ] = myW;
+						var myX = ( index > 0 ) ? parseInt( imgX[ (index - 1) ] + imgW[ (index - 1) ] ) : 0;
+						imgX[ index ] = myX;
+						fluidW += myW;
+						jQuery(element).css({
+					                'position'	: 'absolute',
+					                'top'           : 0 ,
+					                'left'          : myX
+						});
+						_llog('Slide '+index+': Width:'+myW+' Xpos:'+myX);
+					});
+					$cover.width( fluidW );
+					_llog('Film width: '+fluidW);
+			        break;
+				case 'multislide':
+				        _llog('Movement: Multislide');
+				        if( jQuery(options.cvc_window, this).css('position') != undefined ){
+				        	_llog('Position already set on '+main+'; I suppose you\'re taking care of its css');
+						jQuery(options.cvc_window, this).css({'overflow':'hidden','position':'absolute','top':0,'left':0});
+					}
+					jQuery(options.cvc_items, this).each(function(index, element){
+						var myW = parseInt( jQuery(element).width() + options.ms_margin );
+						imgW[ index ] = myW;
+						var myX = ( index > 0 ) ? parseInt( imgX[ (index - 1) ] + imgW[ (index - 1) ] ) : 0;
+						imgX[ index ] = myX;
+						fluidW += myW;
+						jQuery(element).css({
+					                'position'	: 'absolute',
+					                'top'           : 0 ,
+					                'left'          : myX
+						});
+						_llog('MultiSlide '+index+': Width:'+myW+' Xpos:'+myX);
+					});
+					ms_off = parseInt( item_avail % options.ms_show );
+					ms_pages = ( ms_off == 0 ) ? parseInt( item_avail / options.ms_show ) : ( parseInt( item_avail / options.ms_show ) + 1 );
+					_llog('Pages: '+ms_pages);
+					// First Page
+					ms_pageIndex[ 0 ] = 0;
+					for( var j=1; j < ( ms_pages - 1 ); j++ ){
+						ms_pageIndex[ j ] = j * options.ms_show;
+					}
+					// Last Page
+					if( ms_off > 0 ){
+						_llog('There are '+ms_off+' elements in a single page at the end!');
+					        if( options.ms_fullpages ){
+					        	// Show always full pages
+					        	ms_lastindex = ( ( ms_pages - 1 ) * options.ms_show ) - ( options.ms_show - ms_off );
+					        }else{
+					        	// Show a partial page
+                                                	ms_lastindex = ( ( ms_pages - 1 ) * options.ms_show );
+					        }
+					}else{
+                                        	ms_lastindex = ( ( ms_pages - 1 ) * options.ms_show );
+					}
+					_llog('Last Index: '+ms_lastindex);
+					ms_pageIndex[ ( ms_pages - 1 ) ] = ms_lastindex;
+					
+					$cover.width( fluidW );
+					_llog('Film width: '+$cover.width());
+				break;
+			        default:
+					alert('Dude you have to tell me what kind of movement you want! '+options.move_type+' doesn\'t exist!');
+			        break;
 			}
+
 			$object_next = $items.eq( 0 );
 			_function_activate();
 			if( jQuery(options.cvc_caption, this) ) captions = true;
@@ -271,6 +390,7 @@
 			        action_play();
 			}
 			_llog('init Complete');
+			_llog('Film width: '+$cover.width());
 		});
 
 
