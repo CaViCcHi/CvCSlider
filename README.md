@@ -71,7 +71,7 @@ A small example would be
 	       cvc_button_dad	: '.item-toolbox',
 	       cvc_button	: '.item-button',
 	       cvc_prev	        : '.item-prev',
-	       cvc_next	        : '.item-prev',
+	       cvc_next	        : '.item-next',
 	       debug		: true
 	});
 	
