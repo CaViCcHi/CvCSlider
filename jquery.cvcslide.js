@@ -70,8 +70,8 @@
 
 				active          : true,
 				
-				touch           : true,
-				touch_snapgrid  : true,
+				touch           : false,
+				touch_snapgrid  : false,
 				
 				action_start	: '',
 				action_complete	: '',
@@ -142,16 +142,16 @@
 		}
 /* Base Callback */
 		function _callbackStart(indexOld, indexNew){
-		        _llog('Starting Callback Action');
+		        _llog('Starting Action');
 			if(typeof options.action_start == 'function'){
-				options.action_start.call(indexOld, indexNew);
+				options.action_start.call(this, indexOld, indexNew);
 			}
 
 		}
 		function _callbackEnd(indexOld, indexNew){
 		        _llog('Ending Action');
 			if(typeof options.action_complete == 'function'){
-				options.action_complete.call(indexOld, indexNew);
+				options.action_complete.call(this, indexOld, indexNew);
 			}
 		}
 /* Privates */
