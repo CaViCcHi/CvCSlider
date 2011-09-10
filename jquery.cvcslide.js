@@ -70,6 +70,12 @@
 
 				active          : true,
 				
+				touch           : true,
+				touch_snapgrid  : true,
+				
+				action_start	: '',
+				action_complete	: '',
+				
 				debug           : false
 			},
 
@@ -78,6 +84,7 @@
 			$items = jQuery(options.cvc_items, main),
 			$buttons = jQuery(options.cvc_button, options.cvc_button_dad),
 			$cover = jQuery(options.cvc_window, main),
+			whitespace = main.width() - $cover.width(),
 
 			$play = jQuery(options.cvc_play),
 			$pause = jQuery(options.cvc_pause),
@@ -133,7 +140,20 @@
 			_decide_goto( index );
 			_move_to();
 		}
+/* Base Callback */
+		function _callbackStart(indexOld, indexNew){
+		        _llog('Starting Callback Action');
+			if(typeof options.action_start == 'function'){
+				options.action_start.call(indexOld, indexNew);
+			}
 
+		}
+		function _callbackEnd(indexOld, indexNew){
+		        _llog('Ending Action');
+			if(typeof options.action_complete == 'function'){
+				options.action_complete.call(indexOld, indexNew);
+			}
+		}
 /* Privates */
 		$buttons.click(function( event ){
 		if( jQuery( this ).attr('id') ){
@@ -171,6 +191,32 @@
 			$object_next.addClass( options.cvc_active );
 			// Add class to the button
 			$buttons.eq( $object_next.index() ).addClass( options.cvc_active );
+		}
+		function _enableTouch(){
+			if ('ontouchstart' in document.documentElement) {
+				$cover.bind("touchstart", function(event){
+				var e = event.originalEvent;
+					_llog('Start Touching '+e.targetTouches[0].toSource());
+				});
+				$cover.bind("touchmove", function(event){
+				var e = event.originalEvent;
+					event.preventDefault();
+				        tempX = e.targetTouches[0].pageX - parseInt($cover.width()/2);
+				        
+				        //if(tempX < 0) tempX=0;
+				        //if(tempX > whitespace) tempX=whitespace;
+
+		                        $cover.css({'left' : tempX});
+		                        
+		                        _llog('Moving left:'+tempX);
+
+				});
+				$cover.bind("touchend", function(event){
+					_llog('Done Touching');
+				});
+			}else{
+				_llog('Touch NOT supported');
+			}
 		}
 		// Decisions
 		function _decide_goto( index ){
@@ -251,25 +297,35 @@
 		}
 
 		function _movement_fade(){
+		_callbackStart($object_now, $object_next);
 			_function_activate();
 			$object_now.fadeOut( options.move_speed );
 			$object_next.fadeIn( options.move_speed );
+			
+		_callbackEnd($object_now, $object_next);
 		}
 		function _movement_slide(){
+		_callbackStart($object_now, $object_next);
 			_function_activate();
 			$cover.animate({
 			        	'left' : -imgX[ $object_next.index() ]
 				}
 				,options.move_speed
+				,function(){
+					_callbackEnd($object_now, $object_next);
+				}
 			);
 		}
 		function _movement_multislide(){
-		_llog('Moving to '+$object_next.index());
+		_callbackStart($object_now, $object_next);
 			_function_activate();
 			$cover.animate({
 			        	'left' : -imgX[ $object_next.index() ]
 				}
 				,options.move_speed
+				,function(){
+					_callbackEnd($object_now, $object_next);
+				}
 			);
 		}
 		
@@ -282,6 +338,7 @@
 		                break;
 		                default:
 					console.info( '[CvCSlider] '+text );
+					$('#superDebug').html(text);
 				break;
 			}
 		}
@@ -328,6 +385,8 @@
 					});
 					$cover.width( fluidW );
 					_llog('Film width: '+fluidW);
+					
+					if(options.touch) _enableTouch();
 			        break;
 				case 'multislide':
 				        _llog('Movement: Multislide');
@@ -374,6 +433,8 @@
 					
 					$cover.width( fluidW );
 					_llog('Film width: '+$cover.width());
+					
+					if(options.touch) _enableTouch();
 				break;
 			        default:
 					alert('Dude you have to tell me what kind of movement you want! '+options.move_type+' doesn\'t exist!');
