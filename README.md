@@ -45,6 +45,7 @@ There are a few options available so far
 * 	*move_interval*: is the interval between each slide [default: 7000] ms, if 0 the slider won't slide automatically
 *	*move_type*: is the type of sliding [default: fade] possible values so far are slide, fade and multislide
 * 	*move_speed*: is the jquery speed for each action [default: slow] refer to jQuery manual about the allowed values
+* 	*move_stopatlast : do you want the animation to pause at the end of the slideshow? [default: false]
 *       *ms_show: (Multislide Only) how many frames you want to show at a time? [default: 3]
 *       *ms_margin: (Multislide Only) What is the margin between each frame? in pixels [default: 10]
 *       *ms_fullpages: (Multislide Only) Do you want to show the "ms_show" amount at all times? (when at the end of the film you might have only 2 to show, if true will show the last 2 and the previous 1). [default: true]
