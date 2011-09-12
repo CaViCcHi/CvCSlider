@@ -63,6 +63,7 @@
 				move_type       : 'fade',
 				move_speed      : 'slow',
 				move_fluid      : true,
+				move_stopatlast : false,
 
 				ms_show 	: 3,
 				ms_margin	: 10,
@@ -144,14 +145,14 @@
 		function _callbackStart(indexOld, indexNew){
 		        _llog('Starting Action');
 			if(typeof options.action_start == 'function'){
-				options.action_start.call(this, indexOld, indexNew);
+				options.action_start.call(this, indexOld, indexNew, item_max);
 			}
 
 		}
 		function _callbackEnd(indexOld, indexNew){
 		        _llog('Ending Action');
 			if(typeof options.action_complete == 'function'){
-				options.action_complete.call(this, indexOld, indexNew);
+				options.action_complete.call(this, indexOld, indexNew, item_max);
 			}
 		}
 /* Privates */
@@ -292,7 +293,8 @@
 			}
 			
 		        eval( '_movement_'+options.move_type+'();' );
-
+			if(playing && options.move_stopatlast && next == item_max) action_pause();
+			
 		        current = next;
 		}
 
