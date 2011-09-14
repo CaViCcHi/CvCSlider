@@ -70,13 +70,13 @@
 				ms_fullpages	: true,
 
 				active          : true,
-				
+
 				touch           : false,
 				touch_snapgrid  : false,
-				
+
 				action_start	: '',
 				action_complete	: '',
-				
+
 				debug           : false
 			},
 
@@ -188,6 +188,8 @@
 		function _function_activate(){
 		        // Remove Class from Buttons
 			jQuery(options.cvc_button+'.'+options.cvc_active, options.cvc_button_dad).removeClass( options.cvc_active );
+		        // Remove Class from image
+			$items.removeClass( options.cvc_active );
 			// Add class to image
 			$object_next.addClass( options.cvc_active );
 			// Add class to the button
@@ -203,12 +205,12 @@
 				var e = event.originalEvent;
 					event.preventDefault();
 				        tempX = e.targetTouches[0].pageX - parseInt($cover.width()/2);
-				        
+
 				        //if(tempX < 0) tempX=0;
 				        //if(tempX > whitespace) tempX=whitespace;
 
 		                        $cover.css({'left' : tempX});
-		                        
+
 		                        _llog('Moving left:'+tempX);
 
 				});
@@ -232,7 +234,7 @@
 				break;
 			}
 		        next = index;
-		        
+
 		        _llog('---> Next:'+next);
 		}
 		function _decide_prev(){
@@ -291,10 +293,10 @@
 					$object_next = $items.eq( next );
 				break;
 			}
-			
+
 		        eval( '_movement_'+options.move_type+'();' );
 			if(playing && options.move_stopatlast && next == item_max) action_pause();
-			
+
 		        current = next;
 		}
 
@@ -303,7 +305,7 @@
 			_function_activate();
 			$object_now.fadeOut( options.move_speed );
 			$object_next.fadeIn( options.move_speed );
-			
+
 		_callbackEnd($object_now, $object_next);
 		}
 		function _movement_slide(){
@@ -330,7 +332,7 @@
 				}
 			);
 		}
-		
+
 		// Debug
 		function _llog(text){
 			if(!options.debug) return false;
@@ -387,7 +389,7 @@
 					});
 					$cover.width( fluidW );
 					_llog('Film width: '+fluidW);
-					
+
 					if(options.touch) _enableTouch();
 			        break;
 				case 'multislide':
@@ -432,10 +434,10 @@
 					}
 					_llog('Last Index: '+ms_lastindex);
 					ms_pageIndex[ ( ms_pages - 1 ) ] = ms_lastindex;
-					
+
 					$cover.width( fluidW );
 					_llog('Film width: '+$cover.width());
-					
+
 					if(options.touch) _enableTouch();
 				break;
 			        default:
