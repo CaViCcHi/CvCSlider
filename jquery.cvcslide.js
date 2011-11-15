@@ -342,7 +342,6 @@
 		                break;
 		                default:
 					console.info( '[CvCSlider] '+text );
-					$('#superDebug').html(text);
 				break;
 			}
 		}
