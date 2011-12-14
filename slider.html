@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>CvCSlider - The new cool slider</title>
+<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js'></script>
+<script type='text/javascript' src='elements/scripts/jquery.cvcslide.js'></script>
+<style type="text/css">
+/* Switcher */
+body,html{font-family:Arial,sans-serif;font-size:10pt;}
+.body-slider{position:relative;margin:0 auto;padding:43px 0 0;width:640px;height:427px;}
+.body-slider .slider-window{position:absolute;overflow:hidden;width:640px;height:427px;left:0;bottom:0;}
+.body-slider .slider-item{position:relative;width:640px;height:427px;background-position:center;background-repeat:no-repeat;overflow:hidden;background-position:center center;}
+.body-slider .slider-item .slider-caption{position:absolute;display:block;top:200px;left:100px;padding:100px 30px 30px;width:220px;height:100px;text-align:center;background-color:transparent;color:#FFF;font-size:18pt;text-transform:uppercase;font-family:'TradeGothic',Arial,sans-serif;font-weight:normal;}
+.body-slider .slider-buttons{position:absolute;float:right;right:20px;bottom:20px;width:auto;padding:10px 15px;background-color:#000;zoom:1;}
+.body-slider .slider-buttons .slider-button{position:relative;display:inline-block;margin:0 7px 0 0;padding:3px 5px;width:50px;cursor:pointer;zoom:1;background-color:#FFF;color:#000;vertical-align:middle;text-align:center;}
+.body-slider .slider-buttons .slider-button.active,
+.body-slider .slider-buttons .slider-button:hover{background:#BF2E1A;}
+
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+
+var options = {
+	move_type : 'slide',
+	move_speed : 1000,
+	move_interval : 0,
+	debug : false,
+	touch : false
+};
+	var slider = $(".body-slider").CvCSlide( options );
+
+});
+</script>
+</head>
+<body>
+<div id="superDebug"></div>
+<div class="body-slider">
+	<div class="slider-window">
+		<div class="slider-item" style="background-image:url('elements/images/image-1.jpg');" >
+			<div class="slider-caption">
+	                	<div>Frame No.1</div>
+			</div>
+		</div>
+		<div class="slider-item" style="background-image:url('elements/images/image-2.jpg');" >
+			<div class="slider-caption">
+	                	<div>Frame No.2</div>
+			</div>
+		</div>
+		<div class="slider-item" style="background-image:url('elements/images/image-3.jpg');" >
+			<div class="slider-caption">
+	                	<div>Frame No.3</div>
+			</div>
+		</div>
+		<div class="slider-item" style="background-image:url('elements/images/image-4.jpg');" >
+			<div class="slider-caption">
+	                	<div>Frame No.4</div>
+			</div>
+		</div>
+		<div class="slider-item" style="background-image:url('elements/images/image-5.jpg');" >
+			<div class="slider-caption">
+	                	<div>Frame No.5</div>
+			</div>
+		</div>
+		<div class="slider-item" style="background-image:url('elements/images/image-6.jpg');" >
+			<div class="slider-caption">
+	                	<div>Frame No.6</div>
+			</div>
+		</div>
+	</div>
+	<div class="slider-buttons">
+		<a class="slider-button">One</a>
+		<a class="slider-button">Two</a>
+		<a class="slider-button">Three</a>
+		<a class="slider-button">Four</a>
+		<a class="slider-button">Five</a>
+		<a class="slider-button">Six</a>
+	</div>
+</div>
+</body>
+</html>
