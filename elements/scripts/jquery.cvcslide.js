@@ -371,6 +371,7 @@
 					_llog('Movement: Slide');
 				        if( jQuery(options.cvc_window, this).css('position') != 'absolute' ){
 				        	_llog('Absolute already set on '+main+'; I suppose you\'re taking care of its css');
+					}else{
 						jQuery(options.cvc_window, this).css({'overflow':'hidden','position':'absolute','top':0,'left':0});
 					}
 					jQuery(options.cvc_items, this).each(function(index, element){
@@ -395,6 +396,7 @@
 				        _llog('Movement: Multislide');
 				        if( jQuery(options.cvc_window, this).css('position') != undefined ){
 				        	_llog('Position already set on '+main+'; I suppose you\'re taking care of its css');
+					}else{
 						jQuery(options.cvc_window, this).css({'overflow':'hidden','position':'absolute','top':0,'left':0});
 					}
 					jQuery(options.cvc_items, this).each(function(index, element){
